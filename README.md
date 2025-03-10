@@ -13,6 +13,7 @@
         <button type="button" onclick="sendData()">Submit</button>
     </form>
 
+    <script>
     function sendData() {
         let currentTime = document.getElementById("currentTime").value;
         let date = document.getElementById("date").value;
@@ -21,15 +22,17 @@
 
         let scheduleData = `${currentTime},${date},${time},${number}`;
 
+        // Send data to local Python server (Laptop must be running send_data.py)
         fetch("http://localhost:5000/sendData", {
             method: "POST",
             headers: {"Content-Type": "text/plain"},
             body: scheduleData
         }).then(response => response.text()).then(data => {
             alert("Data Sent: " + data);
+        }).catch(error => {
+            alert("Error sending data! Is your Python server running?");
         });
     }
     </script>
 </body>
 </html>
-
