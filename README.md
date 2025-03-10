@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Medication Schedule Input</title>
+</head>
+    <title>Medication Schedule Input</h1>
     <script>
         let scheduleData = [];
 
@@ -60,8 +60,8 @@
     </script>
 </head>
 <body>
-    <h2>Enter Your Medication Schedule</h2>
-
+    ## Enter Your Medication Schedule
+    
     <label>Compartment (0-14):</label>
     <input type="number" id="compartment" min="0" max="14" required><br><br>
 
@@ -74,9 +74,9 @@
     <label>Medication Name (if applicable):</label>
     <input type="text" id="name"><br><br>
 
-    <button type="button" onclick="addToTable()">Add to Schedule</button>
+    <button type="button" onclick="addToTable()"> **Add to Schedule** </button>
 
-    <h3>Medication Schedule</h3>
+    ## Preview Your Medication Schedule
     <table border="1" id="scheduleTable">
         <tr>
             <th>Compartment</th>
@@ -86,6 +86,6 @@
         </tr>
     </table>
 
-    <button type="button" onclick="sendData()">Submit Schedule</button>
+    <button type="button" onclick="sendData()"> **Submit Schedule** </button>
 </body>
 </html>
