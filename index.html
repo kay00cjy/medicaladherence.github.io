@@ -9,7 +9,7 @@
 
         function addToTable() {
 
-            // get table values from  input fields
+            // get table values from input fields
             var table = document.getElementById("scheduleTable");
             var compartment = document.getElementById("compartment").value;
             var date = document.getElementById("date").value;
@@ -28,6 +28,8 @@
                 return a.compartment - b.compartment;
             });
             updateTable();
+
+            alert("Medication schedule successfully saved!");
         }
 
         function updateTable() {
@@ -49,7 +51,36 @@
             });
         }
 
+        function callibration() {
+
+            // get current date and time from input fields
+            var currrentDate = document.getElementById("currrent_date").value;
+            var currentTime = document.getElementById("current_time").value;
+
+            // check that user has actually entered a date and time
+            if (currentDate == "" || currentTime == "") {
+                alert("Please enter your current date and time.");
+                return;
+            }
+
+            // clear compartment 0 and add in current time and date into that cell for data accesss
+            scheduleData = scheduleData.filter(entry => entry.compartment != 0);
+            scheduleData.push({compartment: 0, date: currentDate, time: currentTime});
+
+            alert("Current date and time successfully saved for callibration!");
+        }
+
         function sendData() {
+            if (scheduleData.length == 0) {
+                alert("Please add medication to your schedule before submitting.");
+                return;
+            }
+
+            if(scheduleData.compartment(0) == "") {
+                alert("Please enter your current date and time.");
+                return;
+            }
+
             scheduleData.sort(function(a, b) {
                 return a.compartment - b.compartment;
             });
@@ -66,6 +97,7 @@
                 alert("Error sending your schedule! Is your Python server connected?");
             });
         }
+
     </script>
     <body>
         <h1> My Medication Tracker</h1>
@@ -98,7 +130,7 @@
                 <button type = "button" id="add" onclick = "addToTable()"> Add Medication to your Schedule </button>
 
         <h2> Your Medication Schedule </h2>
-            <p> Below is your medication schedule. Please ensure all details are correct before clicking submit. </p>
+            <p> Below is your medication schedule. Please confirm that all details are correct. </p>
 
             <table border = "1" id ="scheduleTable">
                 <tr>
@@ -110,5 +142,21 @@
             </table>
 
             <p></p>
+
+        <h2> Current Date and Time </h2>
+            <p> Please enter your current date and time for system callibration. This is important to make sure <i> super 
+                cool name</i> is working in the same time as your medication schedule! </p>
+
+            <label> Current Date : </label>
+            <input type = "date" id="current_date" name="current_date" required> <br>
+            <p></p>
+
+            <label> Current Time : </label>
+            <input type = "time" id="current_time" name="current_time" required> <br>
+            <p></p>
+
+            <button type = "button" id="calibrate" onclick = "callibration()"> Submit Current Date and Time </button>
+
+        <h3> Send Data to <i> super cool name</i>!</h3>
             <button type = "button" id="submit" onclick = "sendData()"> Submit Schedule </button>
     </body>

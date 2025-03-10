@@ -6,11 +6,12 @@
 // define parameters
 #define MAX_COMP 15  // 14 compartments for medication, 1 compartment for callibration
 #define BUFFER 100  // max length for incoming serial data
-#define SERVO 22.5  // rotation angle for each compartment
+#define ANGLE 11  // rotation angle for each compartment
 
 // define pins
-// todo !!!
+// TODO: change pins to match hardware !!!
 #define SOUND   9
+#define SERVO   10
 
 // create a new datastype to store all Entries in Medication Schedule
 typedef struct {
@@ -30,14 +31,15 @@ int timeSet = 0;  // Boolean variable (0 = false, 1 = true)
 // initalization 
 void setup() {
     pinMode(SOUND, OUTPUT);
+    myServo.attach(SERVO);
     
-    Serial.begin(9600); // todo : fix !!!
+    Serial.begin(9600); 
 }
 
 void loop() {
     char input[BUFFER];  // stores incoming serial data from Python script
 
-    // only runs  if data is available in buffer
+    // only runs if data is available in buffer
     if (Serial.available()) {
         int index = 0;
 
@@ -47,7 +49,7 @@ void loop() {
             if (c == '\n') break;
             input[index++] = c;
         }
-        input[index] = '\0';  // Null terminate string // todo : wut is dis ???
+        input[index] = '\0';  // TODO: wut is dis ???
 
         // Variables to store parsed data
         int compartment;
@@ -108,11 +110,11 @@ void loop() {
                 digitalWrite(SOUND, LOW);
                 delay (20000); // wait for 20 seconds
 
-                int rotation = SERVO * schedule[i].compartment;
+                int rotation = ANGLE * schedule[i].compartment; //compartments evenly spaced
                 Serial.print("Rotate to compartment: ");
-                Serial.println(rotation);
+                Serial.println(scheduel[i].compartment);
                 servo.write(rotation);
-                delay(300000);  // wait for 5 minutes ?? is this enough ??
+                delay(300000);  // TODO fix this delay
                 servo.write(0);  // reset servo
 
             
