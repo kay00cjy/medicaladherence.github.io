@@ -81,15 +81,19 @@
 
                 <label> Compartment Number (1-14) : </label>
                 <input type = "number" id="compartment" name="compartment number" min = "0" max = "14" required> <br>
+                <p></p>
 
                 <label> Date : </label>
                 <input type = "date" id="date" name="date" required> <br>
+                <p></p>
 
                 <label> Time : </label>
                 <input type = "time" id="time" name="time" required> <br>
+                <p></p>
 
                 <label> Medication Name <i> (if applicable) </i> : </label>
                 <input type = "text" id="medication" name="medication"> <br>
+                <p></p>
 
                 <button type = "button" id="add" onclick = "addToTable()"> Add Medication to your Schedule </button>
 
@@ -105,5 +109,6 @@
                 </tr>
             </table>
 
+            <p></p>
             <button type = "button" id="submit" onclick = "sendData()"> Submit Schedule </button>
     </body>
