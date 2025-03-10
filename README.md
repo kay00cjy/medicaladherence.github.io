@@ -60,7 +60,7 @@
     </script>
 </head>
 <body>
-    <h2>Enter Medication Schedule</h2>
+    <h2>Enter Your Medication Schedule</h2>
 
     <label>Compartment (0-14):</label>
     <input type="number" id="compartment" min="0" max="14" required><br><br>
