@@ -3,44 +3,54 @@
 <head>
     <title>Medication Schedule Input</title>
     <script>
+        let scheduleData = [];
+
         function addToTable() {
             let table = document.getElementById("scheduleTable");
-            let row = table.insertRow(-1);
-
+            let compartment = document.getElementById("compartment").value;
             let date = document.getElementById("date").value;
             let time = document.getElementById("time").value;
             let name = document.getElementById("name").value;
-            let compartment = document.getElementById("compartment").value;
 
-            if (!date || !time || !name || !compartment) {
+            if (!date || !time || !compartment) {
                 alert("Please fill in all fields!");
                 return;
             }
 
-            row.insertCell(0).innerHTML = compartment;
-            row.insertCell(1).innerHTML = date;
-            row.insertCell(2).innerHTML = time;
-            row.insertCell(3).innerHTML = name;
+            // Store data in an array (not table directly)
+            scheduleData.push({ compartment: parseInt(compartment), date, time, name });
+
+            // Sort array based on compartment number
+            scheduleData.sort((a, b) => a.compartment - b.compartment);
+
+            // Refresh table display
+            updateTable();
+        }
+
+        function updateTable() {
+            let table = document.getElementById("scheduleTable");
+            table.innerHTML = `
+                <tr>
+                    <th>Compartment</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Medication</th>
+                </tr>`;
+
+            scheduleData.forEach(entry => {
+                let row = table.insertRow(-1);
+                row.insertCell(0).innerHTML = entry.compartment;
+                row.insertCell(1).innerHTML = entry.date;
+                row.insertCell(2).innerHTML = entry.time;
+                row.insertCell(3).innerHTML = entry.name ? entry.name : "N/A";
+            });
         }
 
         function sendData() {
-            let table = document.getElementById("scheduleTable");
-            let data = [];
-
-            for (let i = 1; i < table.rows.length; i++) {
-                let cells = table.rows[i].cells;
-                data.push({
-                    "compartment": cells[0].innerText,
-                    "date": cells[1].innerText,
-                    "time": cells[2].innerText,
-                    "name": cells[3].innerText
-                });
-            }
-
             fetch("http://localhost:5000/sendData", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+                body: JSON.stringify(scheduleData)
             }).then(response => response.text()).then(data => {
                 alert("Data Sent: " + data);
             }).catch(error => {
@@ -51,18 +61,18 @@
 </head>
 <body>
     <h2>Enter Medication Schedule</h2>
-    
-    <label>Recurring Date:</label>
-    <input type="date" id="date"><br><br>
-    
+
+    <label>Compartment (0-14):</label>
+    <input type="number" id="compartment" min="0" max="14" required><br><br>
+
+    <label>Date:</label>
+    <input type="date" id="date" required><br><br>
+
     <label>Time:</label>
-    <input type="time" id="time"><br><br>
+    <input type="time" id="time" required><br><br>
 
-    <label>Medication Name:</label>
+    <label>Medication Name (if applicable):</label>
     <input type="text" id="name"><br><br>
-
-    <label>Compartment (1-14):</label>
-    <input type="number" id="compartment" min="1" max="14"><br><br>
 
     <button type="button" onclick="addToTable()">Add to Schedule</button>
 
