@@ -2,37 +2,80 @@
 <html>
 <head>
     <title>Medication Schedule Input</title>
+    <script>
+        function addToTable() {
+            let table = document.getElementById("scheduleTable");
+            let row = table.insertRow(-1);
+
+            let date = document.getElementById("date").value;
+            let time = document.getElementById("time").value;
+            let name = document.getElementById("name").value;
+            let compartment = document.getElementById("compartment").value;
+
+            if (!date || !time || !name || !compartment) {
+                alert("Please fill in all fields!");
+                return;
+            }
+
+            row.insertCell(0).innerHTML = compartment;
+            row.insertCell(1).innerHTML = date;
+            row.insertCell(2).innerHTML = time;
+            row.insertCell(3).innerHTML = name;
+        }
+
+        function sendData() {
+            let table = document.getElementById("scheduleTable");
+            let data = [];
+
+            for (let i = 1; i < table.rows.length; i++) {
+                let cells = table.rows[i].cells;
+                data.push({
+                    "compartment": cells[0].innerText,
+                    "date": cells[1].innerText,
+                    "time": cells[2].innerText,
+                    "name": cells[3].innerText
+                });
+            }
+
+            fetch("http://localhost:5000/sendData", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            }).then(response => response.text()).then(data => {
+                alert("Data Sent: " + data);
+            }).catch(error => {
+                alert("Error sending data! Is your Python server running?");
+            });
+        }
+    </script>
 </head>
 <body>
     <h2>Enter Medication Schedule</h2>
-    <form id="medForm">
-        Current Time (HH:MM:SS): <input type="time" id="currentTime" required><br><br>
-        Date: <input type="date" id="date" required><br><br>
-        Time: <input type="time" id="time" required><br><br>
-        Medication Number (1-14): <input type="number" id="number" min="1" max="14" required><br><br>
-        <button type="button" onclick="sendData()">Submit</button>
-    </form>
+    
+    <label>Recurring Date:</label>
+    <input type="date" id="date"><br><br>
+    
+    <label>Time:</label>
+    <input type="time" id="time"><br><br>
 
-    <script>
-    function sendData() {
-        let currentTime = document.getElementById("currentTime").value;
-        let date = document.getElementById("date").value;
-        let time = document.getElementById("time").value;
-        let number = document.getElementById("number").value;
+    <label>Medication Name:</label>
+    <input type="text" id="name"><br><br>
 
-        let scheduleData = `${currentTime},${date},${time},${number}`;
+    <label>Compartment (1-14):</label>
+    <input type="number" id="compartment" min="1" max="14"><br><br>
 
-        // Send data to local Python server (Laptop must be running send_data.py)
-        fetch("http://localhost:5000/sendData", {
-            method: "POST",
-            headers: {"Content-Type": "text/plain"},
-            body: scheduleData
-        }).then(response => response.text()).then(data => {
-            alert("Data Sent: " + data);
-        }).catch(error => {
-            alert("Error sending data! Is your Python server running?");
-        });
-    }
-    </script>
+    <button type="button" onclick="addToTable()">Add to Schedule</button>
+
+    <h3>Medication Schedule</h3>
+    <table border="1" id="scheduleTable">
+        <tr>
+            <th>Compartment</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Medication</th>
+        </tr>
+    </table>
+
+    <button type="button" onclick="sendData()">Submit Schedule</button>
 </body>
 </html>
