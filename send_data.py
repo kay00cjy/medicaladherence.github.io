@@ -5,9 +5,6 @@ import json
 
 app = Flask(__name__)
 
-# Replace with the correct COM port for Arduino
-# Windows: 'COM3', 'COM4', etc.
-# Mac/Linux: '/dev/ttyUSB0', '/dev/ttyACM0'
 arduino = serial.Serial('COM3', 9600, timeout=1)  
 time.sleep(2)  # Allow time for connection
 
