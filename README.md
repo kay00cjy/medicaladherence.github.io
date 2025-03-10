@@ -8,7 +8,7 @@ My Medication Tracker is a web application desgined for users to track their med
 - Record user input of their current time.
 - Send medication schedule data using a Python server to an Arduino board.
 
-## Possible additional functions
+### Possible additional functions
 - Allow users to "sign in" or save their schedule data so it does not need to be inputted every time.
 - Show users a preview of their medication schedule in (super cool name) compartment configuration.
 - Allow users to edit their medication schedule without having to recreate the entire thing. This implies additing edit and delete functions. 
