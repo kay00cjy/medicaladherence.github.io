@@ -1,6 +1,6 @@
 # My Medication Tracker
 ## Welcome to My Medication Tracker!
-My Medication Tracker is a web application desgined for users to track their medication schedule, while using (super cool name) ! You can easily add, update, and delete medications from your schedule for up to 14 dosages.
+My Medication Tracker is a web application desgined for users to track their medication schedule, while using (super cool name) ! You can easily add medications from your schedule for up to 14 dosages.
 
 ## Main functions of this web application
 - Record user input of their medication schedule. This includes the date and time that medication should be taken, as well as the corresponding compartment that the medication is located in (super cool name).
