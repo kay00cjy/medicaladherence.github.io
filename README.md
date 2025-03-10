@@ -13,7 +13,6 @@
         <button type="button" onclick="sendData()">Submit</button>
     </form>
 
-    <script>
     function sendData() {
         let currentTime = document.getElementById("currentTime").value;
         let date = document.getElementById("date").value;
