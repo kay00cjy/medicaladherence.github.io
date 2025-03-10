@@ -5,6 +5,8 @@
     </head>
 
     <script>
+        var scheduleData = [];
+
         function addToTable() {
 
             // get table values from  input fields
@@ -30,13 +32,13 @@
 
         function updateTable() {
             var table = document.getElementById("scheduleTable");
-            table.innerHTML = 
+            table.innerHTML = `
                 <tr>
                     <th> Compartment Number </th>
                     <th> Date </th>
                     <th> Time </th>
                     <th> Medication Name </th>
-                </tr>;
+                </tr>`;
 
             scheduleData.forEach(entry => {
                 var row = table.insertRow(-1);
@@ -48,6 +50,10 @@
         }
 
         function sendData() {
+            scheduleData.sort(function(a, b) {
+                return a.compartment - b.compartment;
+            });
+
             fetch("http://localhost:5000/sendData", {
                 method: "POST",
                 headers: {
@@ -83,7 +89,7 @@
                 <input type = "time" id="time" name="time" required> <br>
 
                 <label> Medication Name <i> (if applicable) </i> : </label>
-                <input type = "text" id="medication_name" name="medication_name"> <br>
+                <input type = "text" id="medication" name="medication"> <br>
 
                 <button type = "button" id="add" onclick = "addToTable()"> Add Medication to your Schedule </button>
 
