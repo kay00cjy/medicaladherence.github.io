@@ -1,91 +1,101 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Medication Schedule Input</h1>
+    <head>
+        <title>My Medication Tracker</title>
+    </head>
+
     <script>
-        let scheduleData = [];
-
         function addToTable() {
-            let table = document.getElementById("scheduleTable");
-            let compartment = document.getElementById("compartment").value;
-            let date = document.getElementById("date").value;
-            let time = document.getElementById("time").value;
-            let name = document.getElementById("name").value;
 
-            if (!date || !time || !compartment) {
-                alert("Please fill in all fields!");
+            // get table values from  input fields
+            var table = document.getElementById("scheduleTable");
+            var compartment = document.getElementById("compartment").value;
+            var date = document.getElementById("date").value;
+            var time = document.getElementById("time").value;
+            var medication = document.getElementById("medication").value;
+
+            // check if the user has entered all fields
+            if (compartment == "" || date == "" || time == "") {
+                alert("Please fill in all fields before adding to your schedule.");
                 return;
             }
 
-            // Store data in an array (not table directly)
-            scheduleData.push({ compartment: parseInt(compartment), date, time, name });
-
-            // Sort array based on compartment number
-            scheduleData.sort((a, b) => a.compartment - b.compartment);
-
-            // Refresh table display
+            // sort the table by compartment number using an array
+            scheduleData.push({compartment: parseInt(compartment), date: date, time: time, medication: medication});
+            scheduleData.sort(function(a, b) {
+                return a.compartment - b.compartment;
+            });
             updateTable();
         }
 
         function updateTable() {
-            let table = document.getElementById("scheduleTable");
-            table.innerHTML = `
+            var table = document.getElementById("scheduleTable");
+            table.innerHTML = 
                 <tr>
-                    <th>Compartment</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Medication</th>
-                </tr>`;
+                    <th> Compartment Number </th>
+                    <th> Date </th>
+                    <th> Time </th>
+                    <th> Medication Name </th>
+                </tr>;
 
             scheduleData.forEach(entry => {
-                let row = table.insertRow(-1);
+                var row = table.insertRow(-1);
                 row.insertCell(0).innerHTML = entry.compartment;
                 row.insertCell(1).innerHTML = entry.date;
                 row.insertCell(2).innerHTML = entry.time;
-                row.insertCell(3).innerHTML = entry.name ? entry.name : "N/A";
+                row.insertCell(3).innerHTML = entry.medication ? entry.medication : "N/A";
             });
         }
 
         function sendData() {
             fetch("http://localhost:5000/sendData", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify(scheduleData)
-            }).then(response => response.text()).then(data => {
-                alert("Data Sent: " + data);
+            }).then(response => response.text()).then(data =>{
+                alert("Schedule successfully sent! : " + data);
             }).catch(error => {
-                alert("Error sending data! Is your Python server running?");
+                alert("Error sending your schedule! Is your Python server connected?");
             });
         }
     </script>
-</head>
-<body>
-</h2> Enter Your Medication Schedule </h2>
-    
-    <label>Compartment (0-14):</label>
-    <input type="number" id="compartment" min="0" max="14" required><br><br>
+    <body>
+        <h1> My Medication Tracker</h1>
+        <h2> Welcome to My Medication Tracker! </h2>
+        <p> My Medication Tracker is a web application desgined for users to track their medication schedule, 
+            while using <i> super cool name </i>! You can easily add, update, and delete medications from 
+            your schedule for up to <b> 14 dosages </b>. </p>
 
-    <label>Date:</label>
-    <input type="date" id="date" required><br><br>
+        <h2> Enter Your Medication Schedule Here! </h2>
+            <p> As you fill in your medication into each compartment <i> super cool name </i>, please enter \
+                the date and time you would like to be reminded to take the medication at. <i> Each compartment 
+                has a small number at the bottom, which represents the corresponding compartment number. </i> </p>
 
-    <label>Time:</label>
-    <input type="time" id="time" required><br><br>
+                <label> Compartment Number (1-14) : </label>
+                <input type = "number" id="compartment" name="compartment number" min = "0" max = "14" required> <br>
 
-    <label>Medication Name (if applicable):</label>
-    <input type="text" id="name"><br><br>
+                <label> Date : </label>
+                <input type = "date" id="date" name="date" required> <br>
 
-    <button type="button" onclick="addToTable()"> **Add to Schedule** </button>
+                <label> Time : </label>
+                <input type = "time" id="time" name="time" required> <br>
 
-    ## Preview Your Medication Schedule
-    <table border="1" id="scheduleTable">
-        <tr>
-            <th>Compartment</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Medication</th>
-        </tr>
-    </table>
+                <label> Medication Name <i> (if applicable) </i> : </label>
+                <input type = "text" id="medication_name" name="medication_name"> <br>
 
-    <button type="button" onclick="sendData()"> **Submit Schedule** </button>
-</body>
-</html>
+                <button type = "button" id="add" onclick = "addToTable()"> Add Medication to your Schedule </button>
+
+        <h2> Your Medication Schedule </h2>
+            <p> Below is your medication schedule. Please ensure all details are correct before clicking submit. </p>
+
+            <table border = "1" id ="scheduleTable">
+                <tr>
+                    <th> Compartment Number </th>
+                    <th> Date </th>
+                    <th> Time </th>
+                    <th> Medication Name </th>
+                </tr>
+            </table>
+    </body>
