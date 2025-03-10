@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <Arduino.h>
 
 // define parameters
 #define MAX_COMP 15  // 14 compartments for medication, 1 compartment for callibration
 #define BUFFER 100  // max length for incoming serial data
+#define SERVO 22.5  // rotation angle for each compartment
 
 // define pins
 // todo !!!
+#define SOUND   9
 
 // create a new datastype to store all Entries in Medication Schedule
 typedef struct {
@@ -26,6 +29,8 @@ int timeSet = 0;  // Boolean variable (0 = false, 1 = true)
 
 // initalization 
 void setup() {
+    pinMode(SOUND, OUTPUT);
+    
     Serial.begin(9600); // todo : fix !!!
 }
 
@@ -88,19 +93,31 @@ void loop() {
     }
 
     // Check if it's time for any medication
-    if (timeSet) {
-        unsigned long elapsedMillis = millis() - startTime;
+    if (timeSet == 1) {
+        unsigned long timePast = millis() - startTime;
 
         for (int i = 0; i < entries; i++) {
-            if (elapsedMillis >= schedule[i].reminderTime) {
-                Serial.print("Time for medication: ");
-                Serial.print(schedule[i].name);
-                Serial.print(" (Compartment ");
-                Serial.print(schedule[i].compartment);
-                Serial.println(")");
+            if (timePast >= schedule[i].reminderTime) {
+                Serial.print("nice message reminder :) ");
+                digitalWrite(SOUND, HIGH);
+                delay(10000);  // play sound for 10 seconds
+                digitalWrite(SOUND, LOW);
+                delay (20000); // wait for 20 seconds
+                digitalWrite(SOUND, HIGH);
+                delay(10000);  // play sound for 10 seconds
+                digitalWrite(SOUND, LOW);
+                delay (20000); // wait for 20 seconds
 
-                delay(60000);  // Avoid repeating the trigger in the same minute
+                int rotation = SERVO * schedule[i].compartment;
+                Serial.print("Rotate to compartment: ");
+                Serial.println(rotation);
+                servo.write(rotation);
+                delay(300000);  // wait for 5 minutes ?? is this enough ??
+                servo.write(0);  // reset servo
+
+            
             }
         }
     }
 }
+
