@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-</head>
+<head>
     <title>Medication Schedule Input</h1>
     <script>
         let scheduleData = [];
