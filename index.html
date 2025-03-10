@@ -27,9 +27,20 @@
             scheduleData.sort(function(a, b) {
                 return a.compartment - b.compartment;
             });
-            updateTable();
 
-            alert("Medication schedule successfully saved!");
+            // check if a compartment has already been filled
+            if (scheduleData.compartment(parseInt(compartment)) != "") {
+                alert("This compartment has already been filled!");
+                return;
+            }
+
+            // clear input fields
+            document.getElementById("compartment").value = "";
+            document.getElementById("date").value = "";
+            document.getElementById("time").value = "";
+            document.getElementById("medication").value = "";
+
+            updateTable();
         }
 
         function updateTable() {
