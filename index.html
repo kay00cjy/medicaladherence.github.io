@@ -28,12 +28,6 @@
                 return a.compartment - b.compartment;
             });
 
-            // check if a compartment has already been filled
-            //if (scheduleData.compartment(parseInt(compartment)) != "") {
-                //alert("This compartment has already been filled!");
-                //return;
-            //}
-
             updateTable();
 
             // clear input fields
@@ -56,6 +50,13 @@
 
             scheduleData.forEach(entry => {
                 var row = table.insertRow(-1);
+                
+                // check if a compartment has already been filled
+                if (scheduleData.compartment(parseInt(compartment)) != "") {
+                    alert("This compartment has already been filled!");
+                    return;
+                }
+
                 row.insertCell(0).innerHTML = entry.compartment;
                 row.insertCell(1).innerHTML = entry.date;
                 row.insertCell(2).innerHTML = entry.time;
