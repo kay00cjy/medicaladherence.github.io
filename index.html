@@ -29,10 +29,12 @@
             });
 
             // check if a compartment has already been filled
-            if (scheduleData.compartment(parseInt(compartment)) != "") {
-                alert("This compartment has already been filled!");
-                return;
-            }
+            //if (scheduleData.compartment(parseInt(compartment)) != "") {
+                //alert("This compartment has already been filled!");
+                //return;
+            //}
+
+            updateTable();
 
             // clear input fields
             document.getElementById("compartment").value = "";
@@ -40,7 +42,6 @@
             document.getElementById("time").value = "";
             document.getElementById("medication").value = "";
 
-            updateTable();
         }
 
         function updateTable() {
