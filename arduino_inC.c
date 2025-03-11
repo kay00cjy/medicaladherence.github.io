@@ -114,7 +114,7 @@ void loop() {
                 Serial.print("Rotate to compartment: ");
                 Serial.println(scheduel[i].compartment);
                 servo.write(rotation);
-                delay(300000);  // TODO fix this delay
+                delay(300000);  // TODO fix this delay (5  minutes)
                 servo.write(0);  // reset servo
 
             

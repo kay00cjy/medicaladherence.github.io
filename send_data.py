@@ -3,7 +3,7 @@ import serial
 import time
 import json
 
-app = Flask(__name__)
+app = Flask(__name__)  # TODO fix!!
 
 arduino = serial.Serial('COM3', 9600, timeout=1)  
 time.sleep(2)  # Allow time for connection
