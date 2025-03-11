@@ -22,6 +22,13 @@
                 return;
             }
 
+            // check if compartment is already full
+            var existing = scheduleData.find(entry => entry.compartment === compartment);
+            if (existing) {
+                alert("Error: You already have medication scheduled in this compartment. Please choose a different compartment.");
+                return;
+            }
+
             // sort the table by compartment number using an array
             scheduleData.push({compartment: parseInt(compartment), date: date, time: time, medication: medication});
             scheduleData.sort(function(a, b) {
@@ -50,13 +57,6 @@
 
             scheduleData.forEach(entry => {
                 var row = table.insertRow(-1);
-                
-                // check if a compartment has already been filled
-                if (scheduleData.compartment(parseInt(compartment)) != "") {
-                    alert("This compartment has already been filled!");
-                    return;
-                }
-
                 row.insertCell(0).innerHTML = entry.compartment;
                 row.insertCell(1).innerHTML = entry.date;
                 row.insertCell(2).innerHTML = entry.time;
@@ -119,6 +119,20 @@
             while using <i> super cool name! </i></p>
         <p>You can easily add, update, and delete medications from your schedule for up to <b> 14 dosages </b>. </p>
 
+        <h2> Current Date and Time </h2>
+            <p> Please enter your current date and time for system callibration. This is important to make sure <i> super 
+                cool name</i> is working in the same time as your medication schedule! </p>
+
+                <label> Current Date : </label>
+                <input type = "date" id="current_date" name="current_date" required> <br>
+                <p></p>
+
+                <label> Current Time : </label>
+                <input type = "time" id="current_time" name="current_time" required> <br>
+                <p></p>
+
+                <button type = "button" id="calibrate" onclick = "callibration()"> Submit Current Date and Time </button>
+
         <h2> Enter Your Medication Schedule Here! </h2>
             <p> As you fill in your medication into each compartment <i> super cool name</i>, please enter
                 the date and time you would like to be reminded to take the medication at. </p> 
@@ -155,20 +169,6 @@
             </table>
 
             <p></p>
-
-        <h2> Current Date and Time </h2>
-            <p> Please enter your current date and time for system callibration. This is important to make sure <i> super 
-                cool name</i> is working in the same time as your medication schedule! </p>
-
-            <label> Current Date : </label>
-            <input type = "date" id="current_date" name="current_date" required> <br>
-            <p></p>
-
-            <label> Current Time : </label>
-            <input type = "time" id="current_time" name="current_time" required> <br>
-            <p></p>
-
-            <button type = "button" id="calibrate" onclick = "callibration()"> Submit Current Date and Time </button>
 
         <h3> Send Data to <i> super cool name</i>!</h3>
             <button type = "button" id="submit" onclick = "sendData()"> Submit Schedule </button>
