@@ -15,6 +15,8 @@
             var date = document.getElementById("date").value;
             var time = document.getElementById("time").value;
             var medication = document.getElementById("medication").value;
+            var effect = document.getElementById("effect").value;
+
 
             // check if the user has entered all fields
             if (compartment == "" || date == "" || time == "") {
@@ -48,6 +50,7 @@
             document.getElementById("date").value = "";
             document.getElementById("time").value = "";
             document.getElementById("medication").value = "";
+            document.getElementById("effect").value = "";
 
         }
 
@@ -68,6 +71,8 @@
                 row.insertCell(1).innerHTML = entry.date;
                 row.insertCell(2).innerHTML = entry.time;
                 row.insertCell(3).innerHTML = entry.medication ? entry.medication : "N/A";
+                row.insertCell(4).innerHTML = entry.effect ? entry.effect : "N/A";
+
             });
         }
 
@@ -145,7 +150,7 @@
 
         <h2> Enter Your Medication Schedule Here! </h2>
             <p> As you fill in your medication into each compartment <i> super cool name</i>, please enter
-                the date and time you would like to be reminded to take the medication at. </p> 
+                the date and time you would like to be reminded to take the medication at. Also, please add the effect the medication has on the user. </p> 
             <p> Each compartment has a small number at the bottom, which represents the corresponding compartment number. </i> </p>
 
                 <label> Compartment Number (1-14) : </label>
@@ -164,6 +169,10 @@
                 <input type = "text" id="medication" name="medication"> <br>
                 <p></p>
 
+                <label> Medication Effect </label>
+                <input type = "text" id="effect" name="effect" required> <br>
+                <p></p>
+
                 <button type = "button" id="add" onclick = "addToTable()"> Add Medication to your Schedule </button>
 
         <h2> Your Medication Schedule </h2>
@@ -175,6 +184,7 @@
                     <th> Date </th>
                     <th> Time </th>
                     <th> Medication Name </th>
+                    <th> Medication Effect </th>
                 </tr>
             </table>
 
