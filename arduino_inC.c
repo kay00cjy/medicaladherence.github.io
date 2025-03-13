@@ -4,9 +4,9 @@
 #include <Arduino.h> // ?? 
 
 // define parameters
-#define MAX_COMP    15      // 14 compartments for medication, 1 compartment for callibration
-#define BUFFER      1000     // max length for incoming serial data
-#define ANGLE       11      // rotation angle to servo motor for each compartment
+#define MAX_COMP    15          // 14 compartments for medication, 1 compartment for callibration
+#define BUFFER      10000       // max length for incoming serial data
+#define ANGLE       11          // rotation angle to servo motor for each compartment
 
 // define pins (modular depending on hardware placement)
 #define SOUND   9
@@ -24,6 +24,7 @@ typedef struct {
     char date[11];                  // format: YYYY-MM-DD
     char time[6];                   // format: HH:MM
     char name[50];                  // medication name
+    char effect[1000]               // medication effect
     unsigned long reminderTime;     // time (in milliseconds) to take medication
 } ScheduleEntry;
 
@@ -67,10 +68,10 @@ void loop() {
 
         // Variables to store parsed data
         int compartment;
-        char date[11], time[6], name[50];
+        char date[11], time[6], name[50], effect[1000];
 
         // Parse received data (Format: "compartment,date,time,medication")
-        if (sscanf(input, "%d,%10[^,],%5[^,],%49[^\n]", &compartment, date, time, name) == 4) { // parse input data
+        if (sscanf(input, "%d,%10[^,],%5[^,],%49[^\n],%999[^\n]", &compartment, date, time, name, effect) == 5) { // parse input data
             
             if (compartment == 0) {
                 // Compartment 0 is for calibration
@@ -84,6 +85,7 @@ void loop() {
                 strncpy(schedule[entries].date, date, 10);
                 strncpy(schedule[entries].time, time, 5);
                 strncpy(schedule[entries].name, name, 49);
+                strncpy(schedule[entries].effect, effect, 999);
 
                 // Convert date and time to milliseconds for trigger time
                 schedule[entries].reminderTime = conversion(date, time);
@@ -98,19 +100,21 @@ void loop() {
 
         for (int i = 0; i < entries; i++) {
             if (timePast >= schedule[i].reminderTime) {
-                Serial.print("nice message reminder :) ");
+                Serial.println("Ding ding ding! It's time to take your medication !!")
                 digitalWrite(SOUND, HIGH);
                 delay(10000);  // play sound for 10 seconds
                 digitalWrite(SOUND, LOW);
-                delay (20000); // wait for 20 seconds
+                delay(20000); // wait for 20 seconds
                 digitalWrite(SOUND, HIGH);
                 delay(10000);  // play sound for 10 seconds
                 digitalWrite(SOUND, LOW);
-                delay (20000); // wait for 20 seconds
+                delay(20000); // wait for 20 seconds
 
                 int rotation = ANGLE * schedule[i].compartment; //compartments evenly spaced
-                Serial.print("Rotate to compartment: ");
-                Serial.println(scheduel[i].compartment);
+                Serial.print("Today, we have some special medication for you!");
+                Serial.println(schedule[i].name);
+                Serial.print(" : ");
+                Serial.println(schedule[i].effect);
                 servo.write(rotation);
                 delay(300000);  // TODO fix this delay (5  minutes)
                 servo.write(0);  // reset servo
