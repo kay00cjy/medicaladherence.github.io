@@ -19,7 +19,7 @@
 
 
             // check if the user has entered all fields
-            if (compartment == "" || date == "" || time == "") {
+            if (compartment == "" || date == "" || time == "" || effect == "") {
                 alert("Please fill in all fields before adding to your schedule.");
                 return;
             }
@@ -38,7 +38,7 @@
             }
 
             // sort existing data by compartment number using an array
-            scheduleData.push({compartment: parseInt(compartment), date: date, time: time, medication: medication});
+            scheduleData.push({compartment: parseInt(compartment), date: date, time: time, medication: medication, effect: effect});
             scheduleData.sort(function(a, b) {
                 return a.compartment - b.compartment;
             });
@@ -62,6 +62,7 @@
                     <th> Date </th>
                     <th> Time </th>
                     <th> Medication Name </th>
+                    <th> Medication Effect </th>
                 </tr>`;
 
             // add inputted info into a preveiw table
@@ -165,7 +166,7 @@
                 <input type = "time" id="time" name="time" required> <br>
                 <p></p>
 
-                <label> Medication Name <i> (if applicable) </i> : </label>
+                <label> Medication Name : <i> (if applicable) </i> : </label>
                 <input type = "text" id="medication" name="medication"> <br>
                 <p></p>
 
