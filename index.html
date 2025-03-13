@@ -38,7 +38,7 @@
             }
 
             // sort existing data by compartment number using an array
-            scheduleData.push({compartment: parseInt(compartment), date: date, time: time, medication: medication});
+            scheduleData.push({compartment: parseInt(compartment), date: date, time: time, medication: medication, effect: effect});
             scheduleData.sort(function(a, b) {
                 return a.compartment - b.compartment;
             });
