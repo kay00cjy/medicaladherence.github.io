@@ -8,12 +8,5 @@ My Medication Tracker is a web application desgined for users to track their med
 - Record user input of their current time.
 - Send medication schedule data using a Python server to an Arduino board.
 
-### Possible additional functions
-- Allow users to "sign in" or save their schedule data so it does not need to be inputted every time.
-- Show users a preview of their medication schedule in Medi Jackpot's compartment configuration.
-- Allow users to edit their medication schedule without having to recreate the entire thing. This implies additing edit and delete functions. 
-
-## Main functions of mechanical software
-- Store medication schedule data to set up a reminder system.
-- Output a reminder sound when it is time to for the user to take their medicated dosage.
-- Rotate the physical medication storage to the corresponding compartment using a servo motor. 
+## Credit
+This application is made for BMEG 257.
