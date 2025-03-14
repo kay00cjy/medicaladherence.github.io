@@ -10,6 +10,7 @@ const int opAmpPin = A4;
 float baselineVoltage = 0.0;
 const float threshold = 0.07; // Voltage threshold to detect medication removal 
 
+
 void setup() {
   Serial.begin(9600);  // Start serial communication for debugging
   delay(2000);         // Allow sensor to stabilize
@@ -19,29 +20,32 @@ void setup() {
  
 }
 
-void loop() {
+int checkMedicationStatus() {
   // Reads current voltage
   float outputVoltage = readVoltage();
   
   // Calculates voltage change from the target baseline (1.4V)
   float voltageChange = baselineVoltage - outputVoltage;
 
-  // Medication Removal Detection
-  if (voltageChange > threshold) {
-    unsigned long currentTime = millis();
-
-      Serial.println(" Medication taken!");
-  }
-    
-  else {
-    Serial.println(" Medication not taken.");
+  
+  if (checkServo(angle) = 1){
+ // Returns 1 if output voltage change is greater than threshold, indicating that medication was taken
+    if (voltageChange > threshold){
+      return 1;
+    }
   }
 
-  // Delay to prevent overcrowding of serial monitor
-  delay(500);
+  // Returns 0 if none of conditions are met
+  return 0;
 }
 
 float readVoltage() {
   int raw_value = analogRead(opAmpPin);
   return (raw_value * 5.0) / 1023.0; // Convert ADC value to voltage (0 to 5V)
+}
+
+// Function to check that the servo motor has rotated the compartment to the correct medication
+int checkServo(angle){
+  // Returns 1 if the servo has rotated the correct amount of degrees, 0 otherwise
+  return (angle == myServo.read()) ? 1 : 0;
 }
