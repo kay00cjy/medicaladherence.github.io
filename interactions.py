@@ -10,78 +10,50 @@ LOG_FILE_PATH = "medication_log.txt"
 fig, ax = plt.subplots(figsize=(6, 1))
 
 def show_progress_bar(dosesTaken, medsPerDay):
-    # Clear the previous plot content
     ax.clear()
-
-    # Set the axis off each time you update
     ax.set_axis_off()
-
-    # Create the outline of the progress bar
-    ax.add_patch(plt.Rectangle((0, 0), 1, 1, linewidth=2, edgecolor='red', facecolor='white'))
-
-    # Calculate the fill proportion based on doses taken
     fill_ratio = dosesTaken / medsPerDay
-
-    # Add the filled section of the progress bar
+    ax.add_patch(plt.Rectangle((0, 0), 1, 1, linewidth=2, edgecolor='red', facecolor='white'))
     ax.add_patch(plt.Rectangle((0, 0), fill_ratio, 1, linewidth=0, edgecolor='none', facecolor='green'))
-
-    # Set the aspect ratio to 'auto' to allow elongation
     ax.set_aspect('auto')
-
-    # Update the plot
     plt.draw()
     plt.pause(0.1)
 
-def dayBasedEncourage(currentDay):
+def dayBasedEncourage(currentDay): #This is just a function that stores randomized messages based on the day
     messages = {
-        "Monday": [
-            "I know Mondays are terrible, nevertheless... Great job you addict! ",
-            "The start to the week is usually sucky but... I'm really proud of you!",
-            "Garfield really hates today, however... You're doing a good job buddy!"
-        ],
-        "Tuesday": [
-            "At least it's not Monday, right? Regardless... Dementia who? Good stuff!",
-            "We're two days into the week. Hang in there!",
-            "Tuesday's can be kinda poopy but...Taking care of yourself, huh? Yay!"
-        ],
-        "Wednesday": [
-            "You've made it to the hump, not much more to go!",
-            "Halfway there, you're doing great!",
-            "It's the middle of the week, you're basically there!"
-        ],
-        "Thursday": [
-            "Keep pushing, Friday is just around the corner!",
-            "The week is almost done, keep at it!",
-            "The weekend is nearly here, you gotta lock in brah"
-        ],
-        "Friday": [
-            "Friday! Friyay! I love fries, do you?",
-            "You made it through the week!",
-            "We going to party hard tonight with all these pills hehe."
-        ],
-        "Saturday": [
-            "We made it to the weekend!",
-            "You did a good job, now go and recharge!",
-            "Saturdays are the day to really kick back and relax!"
-        ],
-        "Sunday": [
-            "Well, at least we don't have to go to Church, am I right?",
-            "It's the last day of the week, Monday is coming...",
-            "Time to really rest up today, because come tomorrow, the shit show starts again..."
-        ]
+        "Monday": ["I know Mondays are terrible, nevertheless... Great job you addict! ", 
+                   "The start to the week is usually sucky but... I'm really proud of you!",
+                   "Garfield really hates today, however... You're doing a good job buddy!"],
+        "Tuesday": ["At least it's not Monday, right? Regardless... Dementia who? Good stuff!", 
+                    "We're two days into the week. Hang in there!", 
+                    "Tuesday's can be kinda poopy but...Taking care of yourself, huh? Yay!"],
+        "Wednesday": ["You've made it to the hump, not much more to go!", 
+                      "Halfway there, you're doing great!", 
+                      "It's the middle of the week, you're basically there!"],
+        "Thursday": ["Keep pushing, Friday is just around the corner!", 
+                     "The week is almost done, keep at it!", 
+                     "The weekend is nearly here, you gotta lock in brah"],
+        "Friday": ["Friday! Friyay! I love fries, do you?", 
+                   "You made it through the week!", 
+                   "We going to party hard tonight with all these pills hehe."],
+        "Saturday": ["We made it to the weekend!", 
+                     "You did a good job, now go and recharge!", 
+                     "Saturdays are the day to really kick back and relax!"],
+        "Sunday": ["Well, at least we don't have to go to Church, am I right?", 
+                   "It's the last day of the week, Monday is coming...", 
+                   "Time to really rest up today, because come tomorrow, the shit show starts again..."]
     }
 
     print(random.choice(messages[currentDay]))
 
-def getNextDay(currentDay):
+def getNextDay(currentDay): #This is to help keep track of the day
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    next_index = (days.index(currentDay) + 1) % 7  # Loops back to Monday after Sunday
+    next_index = (days.index(currentDay) + 1) % 7
     return days[next_index]
 
-def loggingMedicationData(medsTaken, currentDay, medsPerDay):
-    """Log medication intake into a file"""
+def loggingMedicationData(medsTaken, currentDay, medsPerDay): #This writes to the .txt file this code creates
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    log_message = f"{timestamp} - Day: {currentDay}, Meds Taken: {medsTaken} / {medsPerDay}\n"
+    log_message = f"{timestamp} - Day: {currentDay}, Mass Changes: {medsTaken} / {medsPerDay}\n"
     
     with open(LOG_FILE_PATH, "a") as log_file:
         log_file.write(log_message)
@@ -90,13 +62,31 @@ def dailyRoutine():
     global currentDay, medsPerDay, perfectDays  
 
     while True:
-
         interactions = 0
         medsTaken = 0
         
         while interactions < medsPerDay:
             print(f"\nInteraction {interactions + 1} / {medsPerDay} for {currentDay}.")
-            response = input("Did the patient take their meds? (yes/no): ").strip().lower()
+            
+            fail_count = 0  # Track lever pull failures
+            
+            while True:
+                leverPulled = input("Has the lever been pulled? (yes/no): ").strip().lower()
+                if leverPulled == "yes":
+                    break
+                else:
+                    fail_count += 1
+                    print(f"You need to pull the lever first. (Failed attempts: {fail_count}/3)")
+                
+                if fail_count >= 3:
+                    print("Skipping to the next medication encounter...")
+                    break
+
+            if fail_count >= 3:
+                interactions += 1
+                continue
+
+            response = input("Did the mass change? (yes/no): ").strip().lower()
 
             if response == "yes":
                 medsTaken += 1
@@ -118,9 +108,9 @@ def dailyRoutine():
 
             interactions += 1
 
-        print(f"\nThat's all for today. You took your meds {medsTaken} / {medsPerDay} times today.")
+        print(f"\nThat's all for today. You had {medsTaken} mass changes out of {medsPerDay}.")
         if medsTaken == medsPerDay:
-            print("\nWoohoo! Perfect Day! Great job, you did phenomenally today 🙂")
+            print("\nWoohoo! Perfect Day! Great job, you did phenomenally today!")
             perfectDays += 1  
         else:
             perfectDays = 0  
@@ -132,9 +122,8 @@ def dailyRoutine():
 
         time.sleep(0.5)
 
-        # Clear the progress bar and reset it for the next day
-        ax.clear()  # Reset the progress bar each day
-        ax.set_axis_off()  # Keep the axis off after clearing
+        ax.clear()
+        ax.set_axis_off()
         plt.draw()
         plt.pause(0.1)
         
@@ -146,13 +135,13 @@ def setMedsPerDay():
 
     while True:
         try:
-            medsPerDay = int(input("Please enter the number of times the patient takes medicine per day: "))
+            medsPerDay = int(input("Please enter the number of times the patient takes medicine per day: ")) #This is redundant since it is handled elsewhere but it was created for diversifying our sources
             if medsPerDay <= 0:
                 print("Now that's not really possible, is it?")
                 continue
 
             if medsPerDay > 50:
-                response = input("That's kind of ridiculous. Are you sure? (yes/no) \n").strip().lower()
+                response = input("That's kind of ridiculous. Are you sure? (yes/no) \n").strip().lower() #Unlikely the patient takes meds more than 50 times a day but maybe possible
                 if response == "yes":
                     break
                 if response == "no":
@@ -168,11 +157,10 @@ def setMedsPerDay():
 
 def dayOfWeek():
     global currentDay, medsPerDay, perfectDays  
-
     perfectDays = 0  
 
     while True:
-        print("\nWhat day of the week is it? Please enter a number from 1-7")  
+        print("\nWhat day of the week is it? Please enter a number from 1-7 \n1 Stands for Monday, 5 is Friday and 7 is Sunday...")  
         try:
             dayNumber = int(input("> "))  
             if dayNumber < 1 or dayNumber > 7:
@@ -190,6 +178,6 @@ def dayOfWeek():
         except ValueError:
             print("Please enter an actual number.")
 
-# Start the main program
+# Starts the main program
 setMedsPerDay()  
 dayOfWeek()
