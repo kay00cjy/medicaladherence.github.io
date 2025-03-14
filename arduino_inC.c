@@ -47,7 +47,7 @@ void storeSchedule(char *input) {
     int compartment;
     char date[11], time[6], name[50], effect[1000];
 
-    // Input received data (Format: "compartment,date,time,medication" exclusing terminator '\n')
+    // Input received data (Format: "compartment,date,time,medication" excluding terminator '\n')
     if (sscanf(input, "%d,%10[^,],%5[^,],%49[^\n],%999[^\n]", &compartment, date, time, name, effect) == 5) { 
         
         if (compartment == 0) {
