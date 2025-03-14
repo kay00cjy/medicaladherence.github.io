@@ -19,26 +19,16 @@ void setup() {
  
 }
 
-void loop() {
+int loop() {
   // Reads current voltage
   float outputVoltage = readVoltage();
   
   // Calculates voltage change from the target baseline (1.4V)
   float voltageChange = baselineVoltage - outputVoltage;
 
-  // Medication Removal Detection
-  if (voltageChange > threshold) {
-    unsigned long currentTime = millis();
-
-      Serial.println(" Medication taken!");
-  }
-    
-  else {
-    Serial.println(" Medication not taken.");
-  }
-
-  // Delay to prevent overcrowding of serial monitor
-  delay(500);
+ // Returns 1 if output voltage change is greater than threshold, indicating that medication was taken, 0 otherwise
+  return (voltageChange > threshold) ? 1 : 0;
+  
 }
 
 float readVoltage() {
