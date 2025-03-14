@@ -19,7 +19,7 @@ void setup() {
  
 }
 
-int loop() {
+int checkMedicationStatus() {
   // Reads current voltage
   float outputVoltage = readVoltage();
   
