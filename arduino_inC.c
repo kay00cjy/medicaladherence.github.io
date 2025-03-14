@@ -137,8 +137,9 @@ int calc(int i) {
 // create function to rotate servo motor
 void rotateServo(int angle) {
     myServo.write(angle);
-    if 
-    myServo.write(0);  // reset servo
+    if (checkMedicationStatus() == 1){
+        myServo.write(0);  // reset servo
+    }
 }
 
 // initalize system
