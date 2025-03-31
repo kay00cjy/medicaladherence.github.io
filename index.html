@@ -2,6 +2,115 @@
 <html>
     <head>
         <title>My Medication Tracker</title>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Nunito', sans-serif;
+                background-color: #f4f6ff;
+                color: #10024f;
+                margin: 0;
+                padding: 20px;
+            }
+            h1, h2, h3 {
+                color: #1e029c;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            th {
+                background-color: #514dd1;
+                color: white;
+            }
+
+            body.modal-open {
+                filter: blur(5px);
+                pointer-events: none;
+                user-select: none;
+            }
+
+            .modal {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #c1c5ff;
+                color: #0c0870;
+                padding: 30px;
+                border-radius: 10px;
+                width: 300px;
+                text-align: center;
+                z-index: 999;
+                box-shadow: 0 0 15px #2a09e64d;
+            }
+
+            .modal-buttons {
+                margin-top: 20px;
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .modal button {
+                padding: 10px 15px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            .success {
+                background-color: #1e029c;
+                color: white;
+            }
+
+            .back {
+                background-color: #ffffff;
+                color: #1e029c;
+            }
+
+            .center {
+                text-align: center;
+            }
+
+            .container {
+                display: flex;
+                gap: 20px;
+            }
+
+            .left, .right {
+                flex: 1;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                justify-content: space-between;
+                background-color: #e1e3fc;
+                padding: 10px;
+                border-radius: 10px;
+                margin: 40px 0;
+            }
+
+            .button {
+                background-color: #514dd1;
+                color: #ececff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                text-size-adjust: 50px;
+            }
+
+            .blur {
+                filter: blur(5px);
+                pointer-events: none;
+                user-select: none;
+            }
+
+        </style>
     </head>
 
     <script>
@@ -18,7 +127,7 @@
 
 
             // check if the user has entered all fields
-            if (compartment == "" || date == "" || time == "" || effect == "") {
+            if (compartment == "" || date == "" || time == "") {
                 alert("Please fill in all fields before adding to your schedule.");
                 return;
             }
@@ -88,10 +197,7 @@
                 return;
             }
 
-            // clear compartment 0 and add in current time and date into that cell for data accesss
-            scheduleData = scheduleData.filter(entry => entry.compartment != 0);
-            scheduleData.push({compartment: 0, date: currentDate, time: currentTime});
-            alert("Current date and time successfully saved for calibration!");
+            
         }
 
         function sendData() {
@@ -112,85 +218,127 @@
                 return a.compartment - b.compartment;
             });
 
-            // sends data to Python server
-            fetch("http://localhost:5000/sendData", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(scheduleData)
-            }).then(response => response.text()).then(data =>{
-                alert("Schedule successfully sent! : " + data);
-            }).catch(error => {
-                alert("Error sending your schedule! Is your Python server connected?");
-            });
+            showSuccessModal();
+
+        }
+
+        function openMainModal() {
+            document.getElementById("mainModal").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+            document.querySelector(".mainPage").classList.add("blur");
+            document.body.classList.add("modal-active");
+        }
+
+        function showSuccessModal() {
+            closeModals();
+            document.getElementById("successModal").style.display = "none";
+            document.getElementById("successModal").style.display = "block";
+            document.querySelector(".mainPage").classList.add("blur");
+        }
+
+        function closeModals() {
+            document.getElementById("mainModal").style.display = "none";
+            document.getElementById("successModal").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+            document.querySelector(".mainPage").classList.remove("blur");
+            document.body.classList.remove("modal-active");
         }
 
     </script>
     <body>
         <!-- interactive website here! visit the website using https://kay00cjy.github.io/medicaladherence.github.io/ -->
-        <h1> My Medication Tracker</h1>
-        <h2> Welcome to My Medication Tracker! </h2>
-        <p> My Medication Tracker is a web application desgined for users to track their medication schedule, 
-            while using <i> Medi Jackpot. </i></p>
-        <p>You can easily add, update, and delete medications from your schedule for up to <b> 14 dosages </b>. </p>
+        <div class = "mainPage">
+        <h2> MEDI JACKPOT</h1>
+        <h1 class = "center"> Welcome to <i><b>My Medication Tracker!</b></i> </h2>
+        <p class = "center"> Staying onto of your medication schedule has never been so easy! Inuput your medication schedule here while 
+            setting up your <i>Medi Jackpot</i> ! </p>
 
-        <h2> Current Date and Time </h2>
-            <p> Please enter your current date and time for system calibration. This is important to make sure 
-                <i> Medi Jackpot</i> is working in the same time as your medication schedule! </p>
+        <div class = "container">
+            <div class = "left">
+                <h2> Enter Your Medication Schedule </h2>
+                    <p> As you fill in your medication into each compartment in <i> Medi Jackpot</i>, please enter
+                        the date and time you would like to be reminded to take the medication at. 
+                        You can also enter the name of the medication and any side effects you would like to track. </p>
 
-                <label> Current Date : </label>
-                <input type = "date" id="current_date" name="current_date" required> <br>
-                <p></p>
+                        <label><b>Compartment Number (1-14) : </b><i> At the bottom of each medication compartment 
+                            on Medi Jackpot, there is a small number </i></label>
+                        <input type = "number" id="compartment" name="compartment number" min = "0" max = "14" required> <br>
+                        <p></p>
 
-                <label> Current Time : </label>
-                <input type = "time" id="current_time" name="current_time" required> <br>
-                <p></p>
+                        <label><b> Date : </b></label>
+                        <input type = "date" id="date" name="date" required> <br>
+                        <p></p>
 
-                <button type = "button" id="calibrate" onclick = "calibration()"> Submit Current Date and Time </button>
+                        <label><b> Time : </b></label>
+                        <input type = "time" id="time" name="time" required> <br>
+                        <p></p>
 
-        <h2> Enter Your Medication Schedule Here! </h2>
-            <p> As you fill in your medication into each compartment <i> Medi Jackpot</i>, please enter
-                the date and time you would like to be reminded to take the medication at. Also, please add the effect the medication has on the user. </p> 
-            <p> Each compartment has a small number at the bottom, which represents the corresponding compartment number. </i> </p>
+                        <label><b> Medication Name : </b></label>
+                        <input type = "text" id="medication" name="medication"> <br>
+                        <p></p>
 
-                <label> Compartment Number (1-14) : </label>
-                <input type = "number" id="compartment" name="compartment number" min = "0" max = "14" required> <br>
-                <p></p>
+                        <label><b> Medication Effects <i>(if applicable) </i> :</b></label>
+                        <input type = "text" id="effect" name="effect" required> <br>
+                        <p></p>
 
-                <label> Date : </label>
-                <input type = "date" id="date" name="date" required> <br>
-                <p></p>
+                        <button class = "button" id="add" onclick = "addToTable()"> Add Medication to your Schedule </button>
+                        <p></p>
 
-                <label> Time : </label>
-                <input type = "time" id="time" name="time" required> <br>
-                <p></p>
+            </div>
 
-                <label> Medication Name : <i> (if applicable) </i> : </label>
-                <input type = "text" id="medication" name="medication"> <br>
-                <p></p>
+            <div class = "right">
+                <h2> Your Medication Schedule </h2>
+                    <p> Preview your medication schedule below. Please confirm that all details are correct. </p>
 
-                <label> Medication Effect </label>
-                <input type = "text" id="effect" name="effect" required> <br>
-                <p></p>
+                        <table border = "1" id ="scheduleTable">
+                            <tr>
+                                <th> Compartment Number </th>
+                                <th> Date </th>
+                                <th> Time </th>
+                                <th> Medication Name </th>
+                                <th> Medication Effect </th>
+                            </tr>
+                        </table>
+            </div>
+        </div> 
+        
 
-                <button type = "button" id="add" onclick = "addToTable()"> Add Medication to your Schedule </button>
+        <h3 class = "center"> Done? Click <i> Save Schedule </i>!</h3>
+            <div style = "text-align: center;">
+                <button class = "center button" id="submit" onclick = "openMainModal()"> Save Schedule </button>
+            </div>
 
-        <h2> Your Medication Schedule </h2>
-            <p> Below is your medication schedule. Please confirm that all details are correct. </p>
+        </div>   
+        <div class = "overlay" id="overlay"> </div>
+            <div class = "modal" id="mainModal">
+                <h1 class = "center"> We got your schedule! </h2>
+                <p> Before we send off your schedule, please enter your current date and time. 
+                    This is important to make sure <i> Medi Jackpot</i> is working in the same time as you!</p>
+                
+                    <label> Current Date : </label>
+                    <input type = "date" id="current_date" name="current_date" required> <br>
+                    <p></p>
+    
+                    <label> Current Time : </label>
+                    <input type = "time" id="current_time" name="current_time" required> <br>
+                    <p> </p>
+                    <p> </p>
+                
+                    <p> Are you ready to submit your medication schedule?</p>
 
-            <table border = "1" id ="scheduleTable">
-                <tr>
-                    <th> Compartment Number </th>
-                    <th> Date </th>
-                    <th> Time </th>
-                    <th> Medication Name </th>
-                    <th> Medication Effect </th>
-                </tr>
-            </table>
+                    <div class = "modal-buttons">
+                    <button class = "success" id = "submit" onclick = "showSuccessModal();"> Submit! </button>
+                    <button class = "back" onclick = "closeModals()"> Go Back </button>
+                </div>
+            </div>
 
-            <p></p>
-
-        <h3> Send Data to <i> Medi Jackpot</i>!</h3>
-            <button type = "button" id="submit" onclick = "sendData()"> Submit Schedule </button>
-    </body>
+            <div class="modal" id="successModal">
+                <h1 class="center"> <b>Success!</b></h1>
+                <p>Your medication schedule has successfully been loaded into <i>Medi Jackpot</i> !
+                    You are now ready to start tracking your medication!</p>
+                <div class="modal-buttons">
+                  <button class="back" onclick="closeModals()">Got it!</button>
+                </div>
+            </div>
+    
+        </body>
